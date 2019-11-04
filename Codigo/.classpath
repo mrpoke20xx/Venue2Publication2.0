@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="C:/Users/Hermogenes/.p2/pool/plugins/org.eclipse.ui.workbench_3.116.0.v20190826-1428.jar" sourcepath="C:/Users/Hermogenes/.p2/pool/plugins/org.eclipse.ui.workbench_3.116.0.v20190826-1428.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Hermogenes/.p2/pool/plugins/com.ibm.icu_64.2.0.v20190507-1337.jar" sourcepath="C:/Users/Hermogenes/.p2/pool/plugins/com.ibm.icu_64.2.0.v20190507-1337.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Hermogenes/.p2/pool/plugins/org.eclipse.ui.forms_3.8.100.v20190625-1825.jar" sourcepath="C:/Users/Hermogenes/.p2/pool/plugins/org.eclipse.ui.forms_3.8.100.v20190625-1825.jar"/>
+	<classpathentry kind="lib" path="swing2swt.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

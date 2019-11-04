@@ -2,8 +2,11 @@ package gui;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import swing2swt.layout.BoxLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.SWT;
 
-public class Intro {
+public class Principal {
 
 	/**
 	 * Launch the application.
@@ -14,6 +17,7 @@ public class Intro {
 		Shell shell = new Shell();
 		shell.setSize(450, 300);
 		shell.setText("SWT Application");
+		shell.setLayout(new BoxLayout(BoxLayout.X_AXIS));
 
 		shell.open();
 		shell.layout();
