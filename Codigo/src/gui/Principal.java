@@ -31,7 +31,7 @@ public class Principal {
 	public static void main(String[] args) {
 		Display display = Display.getDefault();
 		Shell shlVenuepublication = new Shell();
-		shlVenuepublication.setSize(450, 300);
+		shlVenuepublication.setSize(463, 310);
 		shlVenuepublication.setText("Venue2Publication");
 		shlVenuepublication.setLayout(new GridLayout(1, false));
 		
@@ -49,15 +49,15 @@ public class Principal {
 		pnlBusca.setLayout(new GridLayout(2, false));
 		
 		Label lblBusca = new Label(pnlBusca, SWT.NONE);
-		lblBusca.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
+		lblBusca.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, true, 1, 1));
 		lblBusca.setText("Busca por tags");
 		new Label(pnlBusca, SWT.NONE);
 		
 		txtBusca = new Text(pnlBusca, SWT.BORDER);
-		txtBusca.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
+		txtBusca.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, true, 1, 1));
 		
 		Button btnBusca = new Button(pnlBusca, SWT.NONE);
-		btnBusca.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		btnBusca.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, true, 1, 1));
 		btnBusca.setText("Buscar");
 		
 		Composite pnlBotoes = new Composite(pnlPrinc, SWT.NONE);
@@ -79,9 +79,11 @@ public class Principal {
 		btnInserir.setText("Inserir");
 		
 		Button btnAlterar = new Button(pnlBotoes, SWT.NONE);
+		btnAlterar.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true, 1, 1));
 		btnAlterar.setText("Alterar");
 		
 		Button btnExcluir = new Button(pnlBotoes, SWT.NONE);
+		btnExcluir.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true, 1, 1));
 		btnExcluir.setText("Excluir");
 		
 		tblPrinc = new Table(pnlPrinc, SWT.BORDER | SWT.FULL_SELECTION);
