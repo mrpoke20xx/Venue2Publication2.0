@@ -4,6 +4,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import swing2swt.layout.BoxLayout;
 import org.eclipse.swt.widgets.Composite;
+
+import java.io.File;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.ProgressBar;
 import swing2swt.layout.BorderLayout;
@@ -23,6 +26,7 @@ import org.eclipse.swt.events.SelectionEvent;
 public class Principal {
 	private static Text txtBusca;
 	private static Table tblPrinc;
+	private File arquivo = new File("src/media/document/database.txt");
 
 	/**
 	 * Launch the application.
@@ -54,7 +58,7 @@ public class Principal {
 		new Label(pnlBusca, SWT.NONE);
 		
 		txtBusca = new Text(pnlBusca, SWT.BORDER);
-		txtBusca.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, true, 1, 1));
+		txtBusca.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
 		
 		Button btnBusca = new Button(pnlBusca, SWT.NONE);
 		btnBusca.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, true, 1, 1));
@@ -73,14 +77,24 @@ public class Principal {
 		btnInserir.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				Edit edit = new Edit();
+				edit.open("insert");
 			}
 		});
 		btnInserir.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true, 1, 1));
 		btnInserir.setText("Inserir");
 		
 		Button btnAlterar = new Button(pnlBotoes, SWT.NONE);
+		btnAlterar.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Edit edit = new Edit();
+				edit.open("edit");
+			}
+		});
 		btnAlterar.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true, 1, 1));
 		btnAlterar.setText("Alterar");
+		
 		
 		Button btnExcluir = new Button(pnlBotoes, SWT.NONE);
 		btnExcluir.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true, 1, 1));
@@ -89,7 +103,7 @@ public class Principal {
 		tblPrinc = new Table(pnlPrinc, SWT.BORDER | SWT.FULL_SELECTION);
 		FormData fd_tblPrinc = new FormData();
 		fd_tblPrinc.height = 3;
-		fd_tblPrinc.width = 3;
+		fd_tblPrinc.width = 7;
 		fd_tblPrinc.bottom = new FormAttachment(0, 262);
 		fd_tblPrinc.right = new FormAttachment(0, 434);
 		fd_tblPrinc.top = new FormAttachment(0, 61);

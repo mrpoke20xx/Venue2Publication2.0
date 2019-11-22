@@ -13,14 +13,6 @@ public class Intro {
 	 * Launch the application.
 	 * @param args
 	 */
-	public static void main(String[] args) {
-		try {
-			Intro window = new Intro();
-			window.open();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	/**
 	 * Open the window.
