@@ -1,19 +1,18 @@
 package gui;
 
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import swing2swt.layout.BorderLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Combo;
@@ -21,8 +20,8 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Spinner;
+import org.eclipse.swt.widgets.TableItem;
 
 public class Edit {
 
@@ -30,7 +29,6 @@ public class Edit {
 	private Text txtNome;
 	private Text txtISSN;
 	private String operation;
-	private File arquivo = new File("src/media/document/database.txt");
 
 	/**
 	 * Launch the application.
@@ -58,7 +56,7 @@ public class Edit {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
-		shlEdit = new Shell();
+		shlEdit = new Shell(SWT.MIN | SWT.APPLICATION_MODAL);
 		shlEdit.setSize(373, 407);
 		shlEdit.setText("Venue2Publication");
 		GridLayout gl_shlVenuepublication = new GridLayout(1, false);
@@ -80,6 +78,19 @@ public class Edit {
 
 		txtISSN = new Text(pnlDados, SWT.BORDER);
 		txtISSN.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		txtISSN.addListener(SWT.Verify, new Listener() {
+		      public void handleEvent(Event e) {
+		          String string = e.text;
+		          char[] chars = new char[string.length()];
+		          string.getChars(0, chars.length, chars, 0);
+		          for (int i = 0; i < chars.length; i++) {
+		            if (!('0' <= chars[i] && chars[i] <= '9')) {
+		              e.doit = false;
+		              return;
+		            }
+		          }
+		        }
+		      });
 		if (operation == "edit") {
 			txtISSN.setEditable(false);
 		}
@@ -99,7 +110,7 @@ public class Edit {
 		Label lblEstrato = new Label(pnlDados, SWT.NONE);
 		lblEstrato.setText("Estrato");
 
-		Combo cmbEstrato = new Combo(pnlDados, SWT.NONE);
+		Combo cmbEstrato = new Combo(pnlDados, SWT.NONE | SWT.READ_ONLY);
 		cmbEstrato.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		cmbEstrato.add("A1");
 		cmbEstrato.add("A2");
@@ -132,6 +143,16 @@ public class Edit {
 		gd_pnlBotoes.heightHint = 60;
 		pnlBotoes.setLayoutData(gd_pnlBotoes);
 
+		if (operation == "edit" && Principal.getTblPrinc().getSelectionIndex() != -1) {
+			TableItem[] item = Principal.getTblPrinc().getSelection();
+			txtISSN.setText(item[0].getText(0));
+			txtNome.setText(item[0].getText(1));
+			spnEdicao.setSelection(Integer.parseInt(item[0].getText(2)));
+			cmbEstrato.setText(item[0].getText(3));
+			dateLimite.setData(item[0].getText(4));
+			dateEvento.setData(item[0].getText(5));
+			chkFavorito.setSelection(Boolean.valueOf(item[0].getText(6)));
+		}
 		Button btnCancelar = new Button(pnlBotoes, SWT.NONE);
 		btnCancelar.setLayoutData(BorderLayout.EAST);
 		btnCancelar.addSelectionListener(new SelectionAdapter() {
@@ -140,36 +161,46 @@ public class Edit {
 				shlEdit.close();
 			}
 		});
-		btnCancelar.setText("Cancelar");
+		btnCancelar.setText("Ca&ncelar");
 
 		Button btnConfirmar = new Button(pnlBotoes, SWT.NONE);
 		btnConfirmar.setLayoutData(BorderLayout.CENTER);
+		
 		btnConfirmar.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				
 				try {
-					FileWriter fw = new FileWriter (arquivo);
+					FileWriter fw = new FileWriter (Principal.getArquivo(),true);
 					BufferedWriter escritor = new BufferedWriter(fw);
-					escritor.write(txtISSN.getText() + ",");
-					escritor.write(txtNome.getText() + ",");
-					escritor.write(spnEdicao.getSelection() + ",");
-					escritor.write(cmbEstrato.getText() + ",");
-					escritor.write(dateLimite.getDay() + "/" + dateLimite.getMonth() + "/" + dateLimite.getYear() + ",");
-					escritor.write(dateEvento.getDay() + "/" + dateEvento.getMonth() + "/" + dateEvento.getYear() + ",");
-					escritor.write(String.valueOf(chkFavorito.getEnabled()) + ";");
-					escritor.newLine();
-					escritor.close();
-					fw.close();
-					
-					shlEdit.close();
+					boolean validate = FillColuna.Validador(dateLimite,dateEvento);
+					if (validate == false) {
+						System.out.println("Data Invalida");
+					}
+					else if(escritor != null && validate == true) {
+						if (operation == "edit") {
+							FillColuna.Alter(Principal.getTblPrinc().getItem(Principal.getTblPrinc().getSelectionIndex()), txtNome.getText(), spnEdicao.getSelection(), cmbEstrato.getText(), dateLimite, dateEvento, String.valueOf(chkFavorito.getSelection()));
+						}
+						else if (operation == "insert") {
+							escritor.write(txtISSN.getText() + ",");
+							escritor.write(txtNome.getText() + ",");
+							escritor.write(spnEdicao.getSelection() + ",");
+							escritor.write(cmbEstrato.getText() + ",");
+							escritor.write(dateLimite.getDay() + "/" + (dateLimite.getMonth()+1) + "/" + dateLimite.getYear() + ",");
+							escritor.write(dateEvento.getDay() + "/" + (dateEvento.getMonth()+1) + "/" + dateEvento.getYear() + ",");
+							escritor.write(String.valueOf(chkFavorito.getSelection()));
+							FillColuna.ADD(Principal.getTblPrinc(), txtISSN.getText(), txtNome.getText(), spnEdicao.getSelection(), cmbEstrato.getText(), dateLimite, dateEvento, String.valueOf(chkFavorito.getSelection()));
+							escritor.newLine();
+							
+						}
+						escritor.close();
+						fw.close();
+						shlEdit.close();
+					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
 			}
 		});
-		btnConfirmar.setText("Confirmar");
-
+		btnConfirmar.setText("&Confirmar");
 	}
-
 }
